@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+<title>GeoGebra embed</title>
+</head>
+<body>
+
+<div id="ggb-element"></div>
+
+<script src="https://www.geogebra.org/apps/deployggb.js"></script>
+<!-- script src="/GeoGebra/deployggb.js"></script -->
+<script>
+var cmds = `
+	ZoomIn(1.5)
+O = (0, 0)
+	SetFixed(O, true)
+	ShowLabel(O, true)
+A = (-2, -1)
+	SetFixed(A, true)
+	ShowLabel(A, true)
+B = (2, -1)
+	SetFixed(B, true)
+	ShowLabel(B, true)
+D = Midpoint(A, B)
+	ShowLabel(D, true)
+AB = Segment(A, B)
+c1 = Circle(O, B)
+	SetLineThickness(c1, 2)
+C = Point(c1)
+	SetValue(C, (-1, 2))
+	ShowLabel(C, true)
+BC = Segment(B, C)
+P = Reflect(O, BC)
+c2 = Circle(P, B)
+	SetLineThickness(c2, 2)
+PB = Segment(P, B)
+	SetLineStyle(PB, 2)
+PD = Segment(P, D)
+	SetLineStyle(PD, 2)
+OP = Line(O, P)
+	SetLineStyle(OP, 3)
+	SetLineThickness(OP, 3)
+E = Midpoint(D, B)
+	ShowLabel(E, true)
+PE = Segment(P, E)
+	SetLineStyle(PE, 2)
+`;
+
+var ggbApplet = new GGBApplet({
+	appName: 'graphic',
+	perspective: 'Graphics',
+	id: 'ggb',
+	width: 1200,
+	height: 800,
+	showZoomButtons: true,
+	showMenuBar: true,
+	showToolBar: true,
+	showResetIcon: true,
+	// useBrowserForJS: true,
+	appletOnLoad: onGgbLoad,
+});
+//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/web/');
+//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/web3d/');
+//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/webSimple/');
+//ggbApplet.setHTML5Codebase('/GeoGebra/HTML5/5.0/web/');
+ggbApplet.inject('ggb-element');
+
+function onGgbLoad() {
+	cmds.split('\n').forEach(cmd => {
+		cmd = cmd.trim();
+		if (cmd == '') return;
+		if (cmd.startsWith('#')) return;
+		ggb.evalCommand(cmd);
+	});
+}
+</script>
+</body>
+</html>
