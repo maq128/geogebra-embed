@@ -4,70 +4,82 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <title>GeoGebra embed</title>
+<style>
+body {
+	margin:0;
+	background-color:#eee;
+	overflow:hidden;
+}
+.main {
+	display:flex;
+	justify-content:flex-start;
+	align-items:stretch;
+	width:100%;
+	height:100vh;
+}
+.toolbox {
+	display:flex;
+	flex-direction:column;
+	justify-content:flex-start;
+	align-items:stretch;
+}
+.ggb-container {
+	flex:1;
+	width:600px;
+}
+</style>
 </head>
 <body>
-
-<div id="ggb-element"></div>
+<div class="main">
+	<div class="toolbox">
+		<div style="display:flex">
+			<button id="btn-clear" style="flex:0">Clear</button>
+			<button id="btn-run" style="flex:1">Run</button>
+		</div>
+		<textarea id="ta-scripts" style="flex-grow:1;white-space:pre;" cols="30"></textarea>
+	</div>
+	<div class="ggb-container">
+		<div id="ggb-element"></div>
+	</div>
+</div>
 
 <script src="https://www.geogebra.org/apps/deployggb.js"></script>
 <!-- script src="/GeoGebra/deployggb.js"></script -->
 <script>
-var cmds = `
-	ZoomIn(1.5)
-O = (0, 0)
-	SetFixed(O, true)
-	ShowLabel(O, true)
-A = (-2, -1)
-	SetFixed(A, true)
-	ShowLabel(A, true)
-B = (2, -1)
-	SetFixed(B, true)
-	ShowLabel(B, true)
-D = Midpoint(A, B)
-	ShowLabel(D, true)
-AB = Segment(A, B)
-c1 = Circle(O, B)
-	SetLineThickness(c1, 2)
-C = Point(c1)
-	SetValue(C, (-1, 2))
-	ShowLabel(C, true)
-BC = Segment(B, C)
-P = Reflect(O, BC)
-c2 = Circle(P, B)
-	SetLineThickness(c2, 2)
-PB = Segment(P, B)
-	SetLineStyle(PB, 2)
-PD = Segment(P, D)
-	SetLineStyle(PD, 2)
-OP = Line(O, P)
-	SetLineStyle(OP, 3)
-	SetLineThickness(OP, 3)
-E = Midpoint(D, B)
-	ShowLabel(E, true)
-PE = Segment(P, E)
-	SetLineStyle(PE, 2)
-`;
+window.addEventListener('load', onLoad);
+function onLoad() {
+	var ggbApplet = new GGBApplet({
+		perspective: 'Graphics',
+		id: 'ggb',
+		width: 1200,
+		height: 800,
+		showZoomButtons: true,
+		showMenuBar: true,
+		showToolBar: true,
+		showResetIcon: true,
+		// useBrowserForJS: true,
+		appletOnLoad: onGgbLoad,
+		scaleContainerClass: 'ggb-container',
+		autoHeight: false,
+		// showLogging: true,
+	});
+	//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/web/');
+	//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/web3d/');
+	//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/webSimple/');
+	//ggbApplet.setHTML5Codebase('/GeoGebra/HTML5/5.0/web/');
+	ggbApplet.inject('ggb-element');
 
-var ggbApplet = new GGBApplet({
-	appName: 'graphic',
-	perspective: 'Graphics',
-	id: 'ggb',
-	width: 1200,
-	height: 800,
-	showZoomButtons: true,
-	showMenuBar: true,
-	showToolBar: true,
-	showResetIcon: true,
-	// useBrowserForJS: true,
-	appletOnLoad: onGgbLoad,
-});
-//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/web/');
-//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/web3d/');
-//ggbApplet.setHTML5Codebase('https://www.geogebra.org/apps/5.0.608.0/webSimple/');
-//ggbApplet.setHTML5Codebase('/GeoGebra/HTML5/5.0/web/');
-ggbApplet.inject('ggb-element');
+	document.querySelector('#btn-clear').addEventListener('click', onBtnClear);
+	document.querySelector('#btn-run').addEventListener('click', onBtnRun);
+}
 
 function onGgbLoad() {
+	document.querySelector('#ta-scripts').value = document.querySelector('#ggb-scripts').textContent;
+	onBtnRun();
+}
+
+function onBtnRun() {
+	cmds = document.querySelector('#ta-scripts').value;
 	cmds.split('\n').forEach(cmd => {
 		cmd = cmd.trim();
 		if (cmd == '') return;
@@ -75,6 +87,46 @@ function onGgbLoad() {
 		ggb.evalCommand(cmd);
 	});
 }
+
+function onBtnClear() {
+	ggb.getAllObjectNames().forEach((name) => {
+		ggb.deleteObject(name);
+	});
+}
+</script>
+<script id="ggb-scripts" type="text/x-geogebra-script">
+O = (0, 0)
+   SetFixed(O, true)
+   ShowLabel(O, true)
+A = (-2, -1)
+   SetFixed(A, true)
+   ShowLabel(A, true)
+B = (2, -1)
+   SetFixed(B, true)
+   ShowLabel(B, true)
+D = Midpoint(A, B)
+   ShowLabel(D, true)
+E = Midpoint(D, B)
+   ShowLabel(E, true)
+AB = Segment(A, B)
+c1 = Circle(O, B)
+   SetLineThickness(c1, 2)
+C = Point(c1)
+   SetValue(C, (-1, 2))
+   ShowLabel(C, true)
+BC = Segment(B, C)
+P = Reflect(O, BC)
+c2 = Circle(P, B)
+   SetLineThickness(c2, 2)
+OP = Line(O, P)
+   SetLineStyle(OP, 3)
+   SetLineThickness(OP, 3)
+PB = Segment(P, B)
+   SetLineStyle(PB, 2)
+PD = Segment(P, D)
+   SetLineStyle(PD, 2)
+PE = Segment(P, E)
+   SetLineStyle(PE, 2)
 </script>
 </body>
 </html>
