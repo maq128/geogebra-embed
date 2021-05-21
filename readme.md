@@ -24,10 +24,14 @@ B: (5, 1)
 
 AB: Segment(A, B)
 OA: Line(O, A)
-OB: Ray(O, B)
+OB: Vector(O, B)
+Ray(A, OB)
+Semicircle(A, B)
 
 # https://wiki.geogebra.org/en/Circle_Command
 c1: Circle(O, A)
+c2: Circle(O, A, B)
+c3: Circle(A, 1)
 
 # https://wiki.geogebra.org/en/Slider_Command
 n: Slider(-10, 10, 1)
@@ -68,10 +72,11 @@ SetFilling(c1, 0.3)
 - 取点
 ```
 # 取中点 https://wiki.geogebra.org/en/Midpoint_Command
-P = Midpoint(AB)
+M = Midpoint(AB)
 
 # 取对称点 https://wiki.geogebra.org/en/Reflect_Command
-Q = Reflect(O, AB)
+O' = Reflect(O, AB)
+A' = Reflect(A, xAxis)
 
 # 取交点 https://wiki.geogebra.org/en/Intersect_Command
 S = Intersect(f, c1, 1)
@@ -81,7 +86,7 @@ C = Point(c1)
 SetValue(C, (3, 1))
 ```
 
-- 从一点向一直线做垂线
+- 从 A 点向直线 l 做垂线，垂足为 B
 ```
 A: (5, 5)
 l: y = x/3
@@ -89,4 +94,32 @@ B: Intersect(PerpendicularLine(A, l), l)
 h: Segment(A, B)
   SetLineStyle(h, 2)
   SetLineThickness(h, 2)
+```
+
+- △ABC 的顶角 ∠A 平分线交对边于 D
+```
+A: (0, 0)
+B: (5, 0)
+C: (4, 4)
+Polygon(A, B, C)
+D: Intersect(AngleBisector(B, A, C), Segment(B, C))
+h: Segment(A, D)
+  SetLineStyle(h, 2)
+  SetLineThickness(h, 2)
+```
+
+- 从 A 点做指定长度的线段 AB
+```
+A: (0, 0)
+B: Point(Circle(A, 5))
+  SetValue(B, (3, 3))
+Segment(A, B)
+```
+
+- 把指定图形对象按给定点做旋转
+```
+A: (4, 4)
+B: (5, 0)
+c: Circle(A, 1)
+c': Rotate(c, PI/2, B)
 ```
