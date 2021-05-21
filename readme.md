@@ -26,12 +26,16 @@ AB: Segment(A, B)
 OA: Line(O, A)
 OB: Ray(O, B)
 
-f: y = sin(x)
-g(x) = x^2 + 2x +1
-h: (x-3)^2 + (y+2)^2 = 16
-
 # https://wiki.geogebra.org/en/Circle_Command
 c1: Circle(O, A)
+
+# https://wiki.geogebra.org/en/Slider_Command
+n: Slider(-10, 10, 1)
+SetValue(n, 1)
+
+f: y = n*sin(x)
+g(x) = x^2 + 2x +1
+h: (x-3)^2 + (y+2)^2 = 16
 ```
 
 - 设置图形对象属性
