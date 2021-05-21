@@ -53,7 +53,7 @@ SetPointStyle(O, 10)
 # https://wiki.geogebra.org/en/SetFixed_Command
 SetFixed(O, true)
 
-# https://wiki.geogebra.org/en/ShowLabel%20Command
+# https://wiki.geogebra.org/en/ShowLabel_Command
 ShowLabel(O, true)
 
 # https://wiki.geogebra.org/en/SetLineThickness_Command
